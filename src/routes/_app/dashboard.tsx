@@ -1,0 +1,101 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { getMyDashboard } from "@/lib/zippy.functions";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+export const Route = createFileRoute("/_app/dashboard")({
+  component: Dashboard,
+});
+
+function Dashboard() {
+  const fetchDash = useServerFn(getMyDashboard);
+  const { data, isLoading } = useQuery({ queryKey: ["dashboard"], queryFn: () => fetchDash() });
+
+  if (isLoading) return <div className="text-muted-foreground">Yuklanmoqda...</div>;
+  const s = data?.stats ?? { attempts: 0, avg: 0, correct: 0, wrong: 0 };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold gold-text">Boshqaruv paneli</h1>
+        <p className="text-muted-foreground text-sm">Profilingiz va biriktirilgan testlar</p>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Stat label="Urinishlar" value={s.attempts} />
+        <Stat label="O'rtacha %" value={`${s.avg}%`} />
+        <Stat label="To'g'ri" value={s.correct} />
+        <Stat label="Xato" value={s.wrong} />
+      </div>
+
+      <div>
+        <h2 className="text-xl font-semibold mb-3">Biriktirilgan testlar</h2>
+        {data?.assignments.length === 0 ? (
+          <Card className="p-6 text-muted-foreground">Sizga hozircha test biriktirilmagan</Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {data?.assignments.map((a: any) => (
+              <Card key={a.test_id} className="p-5">
+                <div className="text-xs text-muted-foreground">
+                  {a.tests?.stages?.sections?.name} · {a.tests?.stages?.name}
+                </div>
+                <div className="font-semibold mt-1">{a.tests?.title}</div>
+                <div className="text-xs text-muted-foreground mt-1">{a.tests?.duration_minutes} daqiqa</div>
+                <Link to="/test/$id" params={{ id: a.test_id }}>
+                  <Button className="w-full mt-4">Boshlash</Button>
+                </Link>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <h2 className="text-xl font-semibold mb-3">Tarix</h2>
+        {data?.attempts.length === 0 ? (
+          <Card className="p-6 text-muted-foreground">Hali urinish yo'q</Card>
+        ) : (
+          <Card className="overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
+                <tr>
+                  <th className="text-left p-3">Test</th>
+                  <th className="text-left p-3">Sana</th>
+                  <th className="text-left p-3">Natija</th>
+                  <th className="text-left p-3">T/X</th>
+                  <th className="text-left p-3"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.attempts.map((a: any) => (
+                  <tr key={a.id} className="border-t border-border">
+                    <td className="p-3">{a.tests?.title}</td>
+                    <td className="p-3 text-muted-foreground">{new Date(a.started_at).toLocaleString()}</td>
+                    <td className="p-3 text-primary">{a.finished_at ? `${a.score_percent}%` : "—"}</td>
+                    <td className="p-3">{a.correct_count}/{a.wrong_count}</td>
+                    <td className="p-3">
+                      {a.finished_at && (
+                        <Link to="/result/$id" params={{ id: a.id }} className="text-primary hover:underline">Ko'rish</Link>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Card>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: any }) {
+  return (
+    <Card className="p-4">
+      <div className="text-xs text-muted-foreground">{label}</div>
+      <div className="text-3xl font-bold gold-text mt-1">{value}</div>
+    </Card>
+  );
+}
