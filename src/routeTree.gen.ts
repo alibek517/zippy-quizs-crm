@@ -12,8 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppAdminIndexRouteImport } from './routes/_app/admin/index'
 import { Route as AppTestIdRouteImport } from './routes/_app/test.$id'
 import { Route as AppResultIdRouteImport } from './routes/_app/result.$id'
+import { Route as AppAdminUsersRouteImport } from './routes/_app/admin/users'
+import { Route as AppAdminHistoryRouteImport } from './routes/_app/admin/history'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -29,6 +32,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppTestIdRoute = AppTestIdRouteImport.update({
   id: '/test/$id',
   path: '/test/$id',
@@ -39,39 +47,75 @@ const AppResultIdRoute = AppResultIdRouteImport.update({
   path: '/result/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminHistoryRoute = AppAdminHistoryRouteImport.update({
+  id: '/admin/history',
+  path: '/admin/history',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof AppDashboardRoute
+  '/admin/history': typeof AppAdminHistoryRoute
+  '/admin/users': typeof AppAdminUsersRoute
   '/result/$id': typeof AppResultIdRoute
   '/test/$id': typeof AppTestIdRoute
+  '/admin/': typeof AppAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof AppDashboardRoute
+  '/admin/history': typeof AppAdminHistoryRoute
+  '/admin/users': typeof AppAdminUsersRoute
   '/result/$id': typeof AppResultIdRoute
   '/test/$id': typeof AppTestIdRoute
+  '/admin': typeof AppAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/admin/history': typeof AppAdminHistoryRoute
+  '/_app/admin/users': typeof AppAdminUsersRoute
   '/_app/result/$id': typeof AppResultIdRoute
   '/_app/test/$id': typeof AppTestIdRoute
+  '/_app/admin/': typeof AppAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/result/$id' | '/test/$id'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/admin/history'
+    | '/admin/users'
+    | '/result/$id'
+    | '/test/$id'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/result/$id' | '/test/$id'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/admin/history'
+    | '/admin/users'
+    | '/result/$id'
+    | '/test/$id'
+    | '/admin'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/_app/dashboard'
+    | '/_app/admin/history'
+    | '/_app/admin/users'
     | '/_app/result/$id'
     | '/_app/test/$id'
+    | '/_app/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -102,6 +146,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin/': {
+      id: '/_app/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AppAdminIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/test/$id': {
       id: '/_app/test/$id'
       path: '/test/$id'
@@ -116,19 +167,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppResultIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin/users': {
+      id: '/_app/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AppAdminUsersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin/history': {
+      id: '/_app/admin/history'
+      path: '/admin/history'
+      fullPath: '/admin/history'
+      preLoaderRoute: typeof AppAdminHistoryRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
+  AppAdminHistoryRoute: typeof AppAdminHistoryRoute
+  AppAdminUsersRoute: typeof AppAdminUsersRoute
   AppResultIdRoute: typeof AppResultIdRoute
   AppTestIdRoute: typeof AppTestIdRoute
+  AppAdminIndexRoute: typeof AppAdminIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
+  AppAdminHistoryRoute: AppAdminHistoryRoute,
+  AppAdminUsersRoute: AppAdminUsersRoute,
   AppResultIdRoute: AppResultIdRoute,
   AppTestIdRoute: AppTestIdRoute,
+  AppAdminIndexRoute: AppAdminIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
