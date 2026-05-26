@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_app/admin/users")({
   component: AdminUsers,
 });
 
-function AdminUsers() {
+export function AdminUsers() {
   const qc = useQueryClient();
   const list = useServerFn(adminListUsers);
   const create = useServerFn(adminCreateUser);
@@ -34,7 +34,7 @@ function AdminUsers() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold gold-text">Foydalanuvchilar</h1>
+  <h1 className="text-3xl font-bold text-black">Foydalanuvchilar</h1>
 
       <Card className="p-4 space-y-3">
         <h3 className="font-semibold">Yangi foydalanuvchi</h3>

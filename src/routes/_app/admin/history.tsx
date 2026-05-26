@@ -8,13 +8,13 @@ export const Route = createFileRoute("/_app/admin/history")({
   component: AdminHistory,
 });
 
-function AdminHistory() {
+export function AdminHistory() {
   const fn = useServerFn(adminGetHistory);
   const { data } = useQuery({ queryKey: ["adminHistory"], queryFn: () => fn() });
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold gold-text">Tarix</h1>
+  <h1 className="text-3xl font-bold text-black">Tarix</h1>
 
       <div>
         <h2 className="text-lg font-semibold mb-2">Barcha urinishlar</h2>

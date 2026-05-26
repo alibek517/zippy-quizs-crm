@@ -1,6 +1,7 @@
 import { createFileRoute, redirect, Outlet, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getMe } from "@/lib/zippy.functions";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,25 @@ export const Route = createFileRoute("/_app")({
 function AppLayout() {
   const fetchMe = useServerFn(getMe);
   const navigate = useNavigate();
-  const { data: me } = useQuery({ queryKey: ["me"], queryFn: () => fetchMe() });
+  // Fetch `me` only on the client to avoid SSR serverFn auth issues where the
+  // Authorization header isn't available. This prevents ambiguous admin/user
+  // detection during server render and avoids unexpected redirects after updates.
+  const [me, setMe] = useState<any | undefined>(undefined);
+  useEffect(() => {
+    let mounted = true;
+    fetchMe()
+      .then((d) => {
+        if (!mounted) return;
+        setMe(d);
+      })
+      .catch(() => {
+        if (!mounted) return;
+        setMe(null);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [fetchMe]);
 
   const logout = async () => {
     await supabase.auth.signOut();
@@ -26,41 +45,25 @@ function AppLayout() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      <aside className="w-64 bg-sidebar border-r border-sidebar-border p-4 flex flex-col gap-2">
-        <div className="flex items-center gap-2 mb-6 px-2">
+    <div className="min-h-screen flex flex-col bg-white text-black">
+      <header className="w-full bg-white border-b border-black p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
           <img src={logo} alt="Zippy" className="h-10 w-10 rounded-full" />
           <div>
-            <div className="font-bold gold-text text-lg">Zippy</div>
-            <div className="text-xs text-muted-foreground">reliable service</div>
+            <div className="font-bold text-black">Zippy</div>
+            <div className="text-xs text-black/70">reliable service</div>
           </div>
         </div>
-        <Link to="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-sidebar-accent text-sm" activeProps={{ className: "bg-sidebar-accent text-primary" }}>
-          <LayoutDashboard size={16} /> Boshqaruv
-        </Link>
-        {me?.isAdmin && (
-          <>
-            <Link to="/admin" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-sidebar-accent text-sm" activeProps={{ className: "bg-sidebar-accent text-primary" }}>
-              <Settings size={16} /> Testlar
-            </Link>
-            <Link to="/admin/users" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-sidebar-accent text-sm" activeProps={{ className: "bg-sidebar-accent text-primary" }}>
-              <Users size={16} /> Foydalanuvchilar
-            </Link>
-            <Link to="/admin/history" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-sidebar-accent text-sm" activeProps={{ className: "bg-sidebar-accent text-primary" }}>
-              <History size={16} /> Tarix
-            </Link>
-          </>
-        )}
-        <div className="mt-auto">
-          <div className="px-3 py-2 text-xs text-muted-foreground">
+        <div className="flex items-center gap-3">
+          <div className="text-sm text-black/80">
             {me?.profile?.full_name || me?.profile?.username}
-            {me?.isAdmin && <span className="ml-1 text-primary">(admin)</span>}
+            {me?.isAdmin && <span className="ml-1">(admin)</span>}
           </div>
-          <Button variant="ghost" size="sm" onClick={logout} className="w-full justify-start">
-            <LogOut size={16} /> Chiqish
+          <Button variant="ghost" size="sm" onClick={logout}>
+            <LogOut size={16} />
           </Button>
         </div>
-      </aside>
+      </header>
       <main className="flex-1 p-6 overflow-auto">
         <Outlet />
       </main>

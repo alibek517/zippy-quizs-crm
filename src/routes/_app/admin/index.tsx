@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_app/admin/")({
   component: AdminTests,
 });
 
-function AdminTests() {
+export function AdminTests() {
   const qc = useQueryClient();
   const getTree = useServerFn(adminGetTree);
   const { data } = useQuery({ queryKey: ["adminTree"], queryFn: () => getTree() });
@@ -40,7 +40,7 @@ function AdminTests() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold gold-text">Testlar boshqaruvi</h1>
+  <h1 className="text-3xl font-bold text-black">Testlar boshqaruvi</h1>
 
       <Card className="p-4">
         <div className="flex gap-2">
@@ -161,7 +161,7 @@ function QuestionsManager({ testId, onClose }: { testId: string; onClose: () => 
     <div className="fixed inset-0 bg-black/70 z-50 overflow-auto p-4" onClick={onClose}>
       <Card className="max-w-4xl mx-auto p-6 my-4" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold gold-text">{(data as any)?.title} — Savollar</h2>
+          <h2 className="text-xl font-bold text-black">{(data as any)?.title} — Savollar</h2>
           <Button variant="ghost" onClick={onClose}>Yopish</Button>
         </div>
 

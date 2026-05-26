@@ -112,7 +112,7 @@ function TestRunner() {
     <div ref={containerRef} className="min-h-screen bg-background p-6 overflow-auto">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-bold gold-text">{data.title}</h1>
+          <h1 className="text-xl font-bold text-black">{data.title}</h1>
           <div className="flex items-center gap-4">
             <div className="text-sm text-muted-foreground">{answeredCount}/{data.questions.length}</div>
             <div className="px-3 py-1 rounded-md bg-primary/10 text-primary font-mono font-bold">{mm}:{ss}</div>

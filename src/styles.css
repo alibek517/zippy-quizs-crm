@@ -41,36 +41,36 @@
 
 :root {
   --radius: 0.625rem;
-  /* Navy + gold Zippy palette */
-  --background: oklch(0.13 0.04 265);
-  --foreground: oklch(0.96 0.02 90);
-  --card: oklch(0.18 0.04 265);
-  --card-foreground: oklch(0.96 0.02 90);
-  --popover: oklch(0.18 0.04 265);
-  --popover-foreground: oklch(0.96 0.02 90);
-  --primary: oklch(0.82 0.13 85);
-  --primary-foreground: oklch(0.13 0.04 265);
-  --secondary: oklch(0.24 0.05 265);
-  --secondary-foreground: oklch(0.96 0.02 90);
-  --muted: oklch(0.22 0.04 265);
-  --muted-foreground: oklch(0.7 0.03 85);
-  --accent: oklch(0.75 0.15 80);
-  --accent-foreground: oklch(0.13 0.04 265);
-  --destructive: oklch(0.6 0.22 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.3 0.04 265);
-  --input: oklch(0.24 0.05 265);
-  --ring: oklch(0.82 0.13 85);
-  --sidebar: oklch(0.16 0.04 265);
-  --sidebar-foreground: oklch(0.96 0.02 90);
-  --sidebar-primary: oklch(0.82 0.13 85);
-  --sidebar-primary-foreground: oklch(0.13 0.04 265);
-  --sidebar-accent: oklch(0.22 0.04 265);
-  --sidebar-accent-foreground: oklch(0.96 0.02 90);
-  --sidebar-border: oklch(0.3 0.04 265);
-  --sidebar-ring: oklch(0.82 0.13 85);
-  --gradient-gold: linear-gradient(135deg, oklch(0.82 0.13 85), oklch(0.7 0.16 70));
-  --shadow-gold: 0 8px 30px -8px oklch(0.82 0.13 85 / 0.4);
+  /* Light monochrome theme with a subtle gold accent */
+  --background: #ffffff;
+  --foreground: #0f172a; /* slate-900 */
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #0f172a;
+  --primary-foreground: #ffffff;
+  --secondary: #111827;
+  --secondary-foreground: #ffffff;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --accent: #111827;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e5e7eb;
+  --input: #ffffff;
+  --ring: rgba(17,24,39,0.06);
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #111827;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f8fafc;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: rgba(17,24,39,0.04);
+  --gradient-gold: linear-gradient(135deg,#f59e0b,#b45309);
+  --shadow-gold: 0 6px 24px rgba(0,0,0,0.08);
 }
 
 .dark { }
@@ -89,4 +89,15 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Monochrome utility classes */
+.mono-card {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  color: #0f172a;
+}
+.mono-btn {
+  background: #0f172a;
+  color: #fff;
 }
